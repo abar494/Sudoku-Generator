@@ -26,7 +26,8 @@ def findEmpty(bo):
     return None
 
 
-def isValidRow(bo, pos):
+def isValid(bo, pos):
+    # check if it's a valid row
     # get the current row and column of the number you want to check
     row = pos[0]
     col = pos[1]
@@ -35,33 +36,22 @@ def isValidRow(bo, pos):
         if (bo[row][j] == bo[pos[0]][pos[1]]) and (j != col):
             # it is not valid if there is a match (each number in a row should be unique)
             return False
-    return True
 
-
-def isValidCol(bo, pos):
+    # check if it's a valid column
     # get the current row and column of the number you want to check
-    row = pos[0]
-    col = pos[1]
     for i in range(len(bo)):
         # for that given col, check if any of the other numbers in that col match it
         if (bo[i][col] == bo[row][col]) and (i != row):
             # it is not valid if there is a match (each number in a row should be unique)
             return False
-    return True
 
-
-def isValidBox(bo, pos):
+    # check if it's a valid box
     # box(0, 0) contains rows 0,1,2 cols 0,1,2. Note these numbers
     # floor divided by 0 all equal 0, hence floor division can categorise your row and col
     # into a specific box.
     boxX = pos[0] // 3
     boxY = pos[1] // 3
-
-    row = pos[0]
-    col = pos[1]
-
     # loop through box to check if the same number exists in the box
-
     for y in range(boxY*3, boxY*3 + 3):
         for x in range(boxX*3, boxX*3 + 3):
             if (bo[y][x] == bo[row][col]) and (y != col) and (x != row):
@@ -96,9 +86,3 @@ def printBoard(bo):
 
 
 printBoard(testBoard)
-# tests for row and column checkers
-print(isValidRow(testBoard, (0, 3)))
-print(isValidRow(testBoard, (0, 4)))
-print(isValidCol(testBoard, (0, 4)))
-print(isValidCol(testBoard, (1, 4)))
-
