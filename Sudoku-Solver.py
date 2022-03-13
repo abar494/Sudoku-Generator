@@ -13,8 +13,42 @@ testBoard = [
 ]
 
 
-def findEmpty(bo):
+def solve(bo):
+    # find the first empty slot in the grid
+    nearestEmpty = findEmpty(bo)
+    # obtain the row and column from the tuple
+    # check if the there are no empty slots left, this would mean the sudoku is solved
+    if not nearestEmpty:
+        return True
+    row, col = nearestEmpty
+    # iterate through all possible values that the empty slot can have
+    for i in range(1, 10):
+        # check if the current value is valid within the rules of sudoku
+        if isValid(bo, i, (row, col)):
+            # if the current value is valid, update the entry until the sudoku is hopefully solved.
+            bo[row][col] = i
 
+            # repeat the process with the next empty slot, moving forwards to the next empty slot if
+            # this is still valid.
+            # If invalid, try the other options and if they fail, reverse it back to an empty slot, and go back to the
+            # last empty slot (checking a different value for it).
+            # this is called recursive backtracking, a common algorithm for programs such as mazes.
+            # this lets us try an option, and go back to try another option if we chose the wrong one.
+            if solve(bo):
+                # this will return true if the grid gets filled up, returning false if none of the entries in the for
+                # loop are valid
+                return True
+
+            # if true is not returned, then the current value is not valid and needs to be set back to 0, with another
+            # value from the for loop being used.
+            bo[row][col] = 0
+
+    # if none of the attempts in teh for loop work, False is returned which takes you to the previous empty slot
+    return False
+    # this recursive backtracking process continues until the sudoku is filled up, solving it.
+
+
+def findEmpty(bo):
     # Iterate through board array
     for i in range(len(bo)):
         for j in range(len(bo)):
@@ -22,18 +56,18 @@ def findEmpty(bo):
             if bo[i][j] == 0:
                 # return i (row co-ord) and j (column co-ord)
                 return i, j
-
+    # if there are no entries with a value of zero, return None
     return None
 
 
-def isValid(bo, pos):
+def isValid(bo, num, pos):
     # check if it's a valid row
     # get the current row and column of the number you want to check
     row = pos[0]
     col = pos[1]
     for j in range(len(bo)):
         # for that given row, check if any of the other numbers in that row match it
-        if (bo[row][j] == bo[pos[0]][pos[1]]) and (j != col):
+        if (bo[row][j] == num) and (j != col):
             # it is not valid if there is a match (each number in a row should be unique)
             return False
 
@@ -41,7 +75,7 @@ def isValid(bo, pos):
     # get the current row and column of the number you want to check
     for i in range(len(bo)):
         # for that given col, check if any of the other numbers in that col match it
-        if (bo[i][col] == bo[row][col]) and (i != row):
+        if (bo[i][col] == num) and (i != row):
             # it is not valid if there is a match (each number in a row should be unique)
             return False
 
@@ -49,18 +83,18 @@ def isValid(bo, pos):
     # box(0, 0) contains rows 0,1,2 cols 0,1,2. Note these numbers
     # floor divided by 0 all equal 0, hence floor division can categorise your row and col
     # into a specific box.
-    boxX = pos[0] // 3
-    boxY = pos[1] // 3
+    boxY = pos[0] // 3
+    boxX = pos[1] // 3
     # loop through box to check if the same number exists in the box
     for y in range(boxY*3, boxY*3 + 3):
         for x in range(boxX*3, boxX*3 + 3):
-            if (bo[y][x] == bo[row][col]) and (y != col) and (x != row):
+            # for that given box, check if any of the other numbers in that box match it
+            if (bo[y][x] == num) and ((y, x) != pos):
                 return False
     return True
 
 
 def printBoard(bo):
-
     # Set up a nested for loop to traverse the board
     for i in range(len(bo)):
 
@@ -86,3 +120,7 @@ def printBoard(bo):
 
 
 printBoard(testBoard)
+solve(testBoard)
+print("\n\n\n")
+printBoard(testBoard)
+
