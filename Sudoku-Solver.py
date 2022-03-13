@@ -26,11 +26,26 @@ def findEmpty(bo):
     return None
 
 
-def isValidRow(bo, num, pos):
-    row = pos[0];
-    col = pos[1];
+def isValidRow(bo, pos):
+    # get the current row and column of the number you want to check
+    row = pos[0]
+    col = pos[1]
     for j in range(len(bo)):
-        if (bo[row][j] == num) and (j != col) :
+        # for that given row, check if any of the other numbers in that row match it
+        if (bo[row][j] == bo[pos[0]][pos[1]]) and (j != col):
+            # it is not valid if there is a match (each number in a row should be unique)
+            return False
+    return True
+
+
+def isValidCol(bo, pos):
+    # get the current row and column of the number you want to check
+    row = pos[0]
+    col = pos[1]
+    for i in range(len(bo)):
+        # for that given col, check if any of the other numbers in that col match it
+        if (bo[i][col] == bo[pos[0]][pos[1]]) and (i != row):
+            # it is not valid if there is a match (each number in a row should be unique)
             return False
     return True
 
@@ -62,3 +77,9 @@ def printBoard(bo):
 
 
 printBoard(testBoard)
+# tests for row and column checkers
+print(isValidRow(testBoard, (0, 3)))
+print(isValidRow(testBoard, (0, 4)))
+print(isValidCol(testBoard, (0, 4)))
+print(isValidCol(testBoard, (1, 4)))
+
