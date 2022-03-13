@@ -26,6 +26,15 @@ def findEmpty(bo):
     return None
 
 
+def isValidRow(bo, num, pos):
+    row = pos[0];
+    col = pos[1];
+    for j in range(len(bo)):
+        if (bo[row][j] == num) and (j != col) :
+            return False
+    return True
+
+
 def printBoard(bo):
 
     # Set up a nested for loop to traverse the board
