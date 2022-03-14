@@ -1,3 +1,5 @@
+import random
+
 # Initialise sudoku board for testing
 # 0 represents an empty space
 testBoard = [
@@ -12,6 +14,40 @@ testBoard = [
     [0, 4, 9, 2, 0, 6, 0, 0, 7]
 ]
 
+emptyGrid = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ]
+
+
+def generator(grid, numList):
+    # find the first empty slot in the grid
+    nearestEmpty = findEmpty(grid)
+    if not nearestEmpty:
+        return True
+
+    (row, col) = nearestEmpty
+
+    for i in range(0, 9):
+        currentNum = numList[i]
+    # check if there are no empty slots left, this would mean the sudoku is solved
+
+        if isValid(grid, currentNum, (row, col)):
+            grid[row][col] = currentNum
+            randList = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+            random.shuffle(randList)
+            if generator(grid, randList):
+                return True
+            grid[row][col] = 0
+    return False
+
 
 def solve(bo):
     # find the first empty slot in the grid
@@ -20,6 +56,7 @@ def solve(bo):
     # check if the there are no empty slots left, this would mean the sudoku is solved
     if not nearestEmpty:
         return True
+
     row, col = nearestEmpty
     # iterate through all possible values that the empty slot can have
     for i in range(1, 10):
@@ -119,8 +156,9 @@ def printBoard(bo):
                 # otherwise we just print our numbers in between the dividers
 
 
-printBoard(testBoard)
-solve(testBoard)
+printBoard(emptyGrid)
+randomList = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+random.shuffle(randomList)
+generator(emptyGrid, randomList)
 print("\n\n\n")
-printBoard(testBoard)
-
+printBoard(emptyGrid)
